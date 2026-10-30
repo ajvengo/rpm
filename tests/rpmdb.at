@@ -53,6 +53,24 @@ runroot rpm \
 [ignore])
 RPMTEST_CLEANUP
 
+# Run rpm -qa as a user on an empty rpmdb directory it cannot write to
+RPMTEST_SETUP_RW([rpm -qa on an unopenable rpmdb])
+RPMTEST_USER
+AT_KEYWORDS([rpmdb query sqlite])
+RPMTEST_CHECK([
+mkdir "${RPMTEST}"/emptydb
+runroot_user rpm \
+  --define "_db_backend sqlite" --dbpath /emptydb \
+  -qa
+],
+[1],
+[],
+[error: Unable to open sqlite database /emptydb/rpmdb.sqlite: unable to open database file
+error: cannot open Packages index using sqlite - Operation not permitted (1)
+error: cannot open Packages database in /emptydb
+])
+RPMTEST_CLEANUP
+
 RPMTEST_SETUP_RW([rpm -qa 3])
 AT_KEYWORDS([rpmdb query])
 
