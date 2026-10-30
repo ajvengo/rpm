@@ -151,8 +151,6 @@ static int sqlite_init(rpmdb rdb, const char * dbhome)
 	if (xx != SQLITE_OK) {
 	    rpmlog(RPMLOG_ERR, _("Unable to open sqlite database %s: %s\n"),
 		    dbfile, sqlite3_errstr(xx));
-	    /* Sqlite allocates resources even on failure to open (!) */
-	    sqlite3_close(sdb);
 	    rc = 1;
 	    goto exit;
 	}
